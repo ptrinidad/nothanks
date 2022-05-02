@@ -102,7 +102,7 @@ export default class NoThanksState extends GameState {
     }
 
     public get currentCard(): NoThanksCard {
-        return this.deck.head();
+        return this.deck.head;
     }
 
     public playerGetsCurrentCard(): NoThanksState {

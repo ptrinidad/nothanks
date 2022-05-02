@@ -1,6 +1,7 @@
 - End of game condition
 - State of the game: adding players, playing, ended, starting again
 - Deploy at https://vercel.com
+- Undo
 
 FIXME
 - Initial colours in player data doesn't correspond to data (https://nextjs.org/docs/messages/react-hydration-error)
