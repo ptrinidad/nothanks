@@ -17,7 +17,7 @@ export default class NoThanksState extends GameState {
     pool: ResourcesPool<Resources>;
 
     public constructor(players: NoThanksPlayer[], gameElements: UniqueGameElement[], status?: GameStatus, complexityAnalyst?: ComplexityAnalyst) {
-        super(players, gameElements, status, complexityAnalyst);
+        super(3, 5, players, gameElements, status, complexityAnalyst);
         this.players = players;
         this.deck = new CardHolder<NoThanksCard>();
         this.removedCards = new CardHolder<NoThanksCard>();
@@ -53,11 +53,13 @@ export default class NoThanksState extends GameState {
 
     protected computeAvailableActions(): GameAction[] {
         const res : GameAction[] = [];
-        if (this.playerHasEnoughChips) {
-            res.push(new PassAction());
+        if (this.status === "playing") {
+            if (this.playerHasEnoughChips) {
+                res.push(new PassAction());
+            }
+            const chipsAmount = this.pool.getResources(chipType) || 0;
+            res.push(new GetCardAction(chipsAmount));
         }
-        const chipsAmount = this.pool.getResources(chipType) || 0;
-        res.push(new GetCardAction(chipsAmount));
         return res;
     }
 
@@ -120,7 +122,9 @@ export default class NoThanksState extends GameState {
     }
 
     public addPlayer(name: string) {
-        this.players.push(new NoThanksPlayer(name));
+        if (this.status == "open") {
+            this.players.push(new NoThanksPlayer(name));
+        }
     }
 
     public get currentPlayer() : NoThanksPlayer {

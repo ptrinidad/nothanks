@@ -15,8 +15,12 @@ import MiniPlayerProfile from 'src/components/MiniPlayerProfile';
 export interface IPanelProps {
 }
 
-function onClick(event: React.MouseEvent<HTMLButtonElement>) {
+function onAddPlayer(event: React.MouseEvent<HTMLButtonElement>) {
     gameState.addPlayer("Player " + (gameState.players.length + 1));
+}
+
+function onStart(event: React.MouseEvent<HTMLButtonElement>) {
+    gameState.startGame();
 }
 
 export default observer(function SummaryPanel(props: IPanelProps) {
@@ -46,7 +50,10 @@ export default observer(function SummaryPanel(props: IPanelProps) {
                 }
             </Flex>
             <Center>
-                <Button bgColor="brand.500" onClick={(e) => { onClick(e) }}>Add player</Button>
+                {gameState.status === "open" ? <Button bgColor="brand.500" onClick={(e) => { onAddPlayer(e) }}>Add player</Button> : null}
+            </Center>
+            <Center>
+                {gameState.status === "open" ? <Button bgColor="brand.500" onClick={(e) => { onStart(e) }}>Start</Button> : null}
             </Center>
         </Box>
     )

@@ -3,7 +3,7 @@ import {ComplexityAnalyst, GameAction} from "./decision";
 import UniqueGameElement from "./gameElement"
 import Player from "./player";
 
-export type GameStatus = "open" | "inplay" | "gameover";
+export type GameStatus = "open" | "playing" | "gameover";
 
 export default abstract class GameState {
     gameElements: UniqueGameElement[];
@@ -11,7 +11,7 @@ export default abstract class GameState {
     players: Player[];
     status: GameStatus;
 
-    public constructor (players: Player[], gameElements: UniqueGameElement[], status?: GameStatus, complexityAnalyst?: ComplexityAnalyst) {
+    public constructor (protected _minPlayers = 1, protected _maxPlayers = 5, players: Player[] = [], gameElements: UniqueGameElement[], status?: GameStatus, complexityAnalyst?: ComplexityAnalyst) {
         this.players = players;
         this.gameElements = gameElements;
         this.complexityAnalyst = complexityAnalyst;
@@ -29,6 +29,14 @@ export default abstract class GameState {
     }
     protected abstract computeAvailableActions() : GameAction[];
 
+    public get minPlayers() {
+        return this._minPlayers;
+    }
+
+    public get maxPlayers() {
+        return this._maxPlayers;
+    }
+
     public get availableActions () : GameAction[] {
         const res = this.computeAvailableActions ();
         if (ComplexityAnalyst) {
@@ -40,6 +48,15 @@ export default abstract class GameState {
     public makeDecision(decision: GameAction) {
         if (this.availableActions.indexOf(decision) !== -1) {
             decision.execute(this);
+        }
+    }
+
+    public startGame() : boolean {
+        if (this.status === "open" && this.players.length >= this.minPlayers && this.players.length <= this.maxPlayers) {
+            this.status = "playing";
+            return true;
+        } else {
+            return false;
         }
     }
 }

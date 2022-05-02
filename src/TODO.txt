@@ -1,7 +1,7 @@
 - End of game condition
-- State of the game: adding players, playing, ended, starting again
 - Deploy at https://vercel.com
 - Undo
+- Adding players and disable start if not enough or too much players.
 
 FIXME
 - Initial colours in player data doesn't correspond to data (https://nextjs.org/docs/messages/react-hydration-error)
@@ -10,3 +10,5 @@ FIXME
 
 DONE
 - 2/05/2022 Order cards by value when acquired by players. Ladders are drawn together.
+- 2/05/2022 New layout
+- 2/05/2022 State of the game: adding players, playing, ended
