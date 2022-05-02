@@ -17,10 +17,22 @@ export default observer(class HeadingPanel extends React.Component<IHeadingProps
         const currentPlayer = gameState.currentPlayer;
 
         return (
-        <VStack bgColor={currentPlayer.color}>
-            <Heading>{currentPlayer.name}</Heading>
-            <Text>Score: {currentPlayer.score}</Text>
-        </VStack>
+            <VStack>
+                {(gameState.status === "open") ?
+                    <>
+                        <Heading>Waiting for players</Heading>
+                    </> : null}
+                {(gameState.status === "playing") ?
+                    <>
+                        <Heading>{currentPlayer.name}</Heading>
+                        <Text>Score: {currentPlayer.score}</Text>
+                    </> : null}
+                {(gameState.status === "finished") ?
+                    <>
+                        <Heading>Game finished</Heading>
+                        <Text>Winner: {gameState.currentWinners.map((player, i) => ( ((i > 0) ? ", " + player.name: player.name) ))}</Text>
+                    </> : null}
+            </VStack>
         );
     }
 })

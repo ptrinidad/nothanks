@@ -3,7 +3,7 @@ import {ComplexityAnalyst, GameAction} from "./decision";
 import UniqueGameElement from "./gameElement"
 import Player from "./player";
 
-export type GameStatus = "open" | "playing" | "gameover";
+export type GameStatus = "open" | "playing" | "finished";
 
 export default abstract class GameState {
     gameElements: UniqueGameElement[];
@@ -25,6 +25,9 @@ export default abstract class GameState {
             availableActions: computed,
             status: observable,
             gameElements: observable,
+            enoughPlayers: computed,
+            isMaxPlayersReached: computed,
+            startGame: action,
         });
     }
     protected abstract computeAvailableActions() : GameAction[];
@@ -51,8 +54,16 @@ export default abstract class GameState {
         }
     }
 
+    public get enoughPlayers() {
+        return this.players.length >= this.minPlayers && this.players.length <= this.maxPlayers;
+    }
+
+    public get isMaxPlayersReached() {
+        return this.players.length === this.maxPlayers;
+    };
+
     public startGame() : boolean {
-        if (this.status === "open" && this.players.length >= this.minPlayers && this.players.length <= this.maxPlayers) {
+        if (this.status === "open" && this.enoughPlayers) {
             this.status = "playing";
             return true;
         } else {

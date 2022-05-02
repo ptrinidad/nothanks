@@ -1,7 +1,11 @@
 import React, { useRef } from 'react';
 
 import { observer } from 'mobx-react';
-import { Button, Box, Flex, useDimensions, Center } from '@chakra-ui/react';
+import {
+    Button, Box, Center,
+    Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody,
+    Flex, useDimensions, useDisclosure, HStack
+} from '@chakra-ui/react';
 
 import gameState from 'pages/store';
 
@@ -32,6 +36,8 @@ export default observer(function SummaryPanel(props: IPanelProps) {
         width: "full",
         bottom: "0",
     }
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     return (
         <Box ref={boxRef} __css={isMiniVersion ? sticky : {}} bgColor="brand.50">
             <Flex bgColor="brand.50" justifyContent="center">
@@ -43,21 +49,49 @@ export default observer(function SummaryPanel(props: IPanelProps) {
                         set("Chips", chips.toString());
                     return (
                         isMiniVersion
-                            ? <MiniPlayerProfile m="2px" key={"MiniPlayerProfile"+p.name} name={p.name} color={p.color} info={info} active={isCurrent} />
-                            : <PlayerProfile m="10px" key={"PlayerProfile"+p.name} name={p.name} color={p.color} info={info} active={isCurrent} />
+                            ? <MiniPlayerProfile m="2px" key={"MiniPlayerProfile" + p.name} name={p.name} color={p.color} info={info} active={isCurrent} />
+                            : <PlayerProfile m="10px" key={"PlayerProfile" + p.name} name={p.name} color={p.color} info={info} active={isCurrent} />
                     )
                 })
                 }
             </Flex>
-            <Center>
-                {gameState.status === "open" ? <Button bgColor="brand.500" onClick={(e) => { onAddPlayer(e) }}>Add player</Button> : null}
-            </Center>
-            <Center>
-                {gameState.status === "open" ? <Button bgColor="brand.500" onClick={(e) => { onStart(e) }}>Start</Button> : null}
-            </Center>
+            {gameState.status === "open" ?
+                <Center>
+                    <HStack p="1em" spacing="1em">
+                        {!!!gameState.isMaxPlayersReached ? <>
+                            <Button bgColor="brand.500" onClick={(e) => { onAddPlayer(e) }}>Add player</Button>
+                            <NewPlayerDrawer isOpen={isOpen} onClose={onClose} /></>
+                            : null
+                        }
+                        {gameState.enoughPlayers ?
+                            <Button bgColor="brand.500" onClick={(e) => { onStart(e) }}>Start</Button>
+                            : null}
+                    </HStack>
+                </Center>
+                : null}
+
         </Box>
     )
 }
 )
 
+interface IDrawerProps {
+    onClose: () => void,
+    isOpen: boolean,
+}
 
+function NewPlayerDrawer(props: IDrawerProps) {
+    const { onClose, isOpen } = props;
+    return (
+        <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+            <DrawerOverlay />
+            <DrawerContent>
+                <DrawerCloseButton />
+                <DrawerBody>
+                    Probando
+                </DrawerBody>
+            </DrawerContent>
+
+        </Drawer>
+    );
+}

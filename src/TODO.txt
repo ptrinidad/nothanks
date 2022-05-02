@@ -1,14 +1,18 @@
-- End of game condition
 - Deploy at https://vercel.com
 - Undo
-- Adding players and disable start if not enough or too much players.
+- i18n support
 
 FIXME
 - Initial colours in player data doesn't correspond to data (https://nextjs.org/docs/messages/react-hydration-error)
 - Key errors in console
 - Pass player 3 with 1 chip remaining => chip reduced and must take card!
+- Check tiebreaker
 
 DONE
 - 2/05/2022 Order cards by value when acquired by players. Ladders are drawn together.
 - 2/05/2022 New layout
 - 2/05/2022 State of the game: adding players, playing, ended
+- 2/05/2022 End of game condition
+- 2/05/2022 Stop adding players when limit reached and disable start if not enough or too much players.
+
+

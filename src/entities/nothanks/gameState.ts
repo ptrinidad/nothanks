@@ -48,6 +48,7 @@ export default class NoThanksState extends GameState {
             playerGetsCurrentCard: action,
             addPlayer: action,
             currentPlayer: computed,
+            currentWinners: computed,
         });
     }
 
@@ -111,6 +112,9 @@ export default class NoThanksState extends GameState {
         this.deck.pop(this.players[this.whoisturn]._cards);
         const chips = this.pool.removeAllFromResource(chipType);
         this.players[this.whoisturn]._pool.addResources(chipType, chips);
+        if (!this.deck.hasCards) {
+            this.status = "finished";
+        }
         return this;
     }
 
@@ -130,4 +134,19 @@ export default class NoThanksState extends GameState {
     public get currentPlayer() : NoThanksPlayer {
         return this.players[this.whoisturn];
     }
+
+    // return the player with the highest score
+    public get currentWinners() : NoThanksPlayer[] {     
+        let winners = [this.players[0]];
+        let score = this.players[0].score;
+        for (let i = 1; i < this.players.length; i++) {
+            if (this.players[i].score > score) {
+                winners = [this.players[i]];
+            } else if (this.players[i].score == score) {
+                winners.push(this.players[i]);
+            }
+        }
+        return winners;   
+    }
+
 }
