@@ -31,7 +31,7 @@ export default class NoThanksState extends GameState {
         this.whoisturn = 0;
         this.pool = new ResourcesPool();
         this.pool.addResources(chipType, 0);
-        makeObservable (this, {
+        makeObservable(this, {
             players: override,
             availableActions: override,
             status: override,
@@ -53,11 +53,13 @@ export default class NoThanksState extends GameState {
     }
 
     protected computeAvailableActions(): GameAction[] {
-        const res : GameAction[] = [];
+        const res: GameAction[] = [];
         if (this.status === "playing") {
             if (this.playerHasEnoughChips) {
                 res.push(new PassAction());
             }
+
+            // get card action needs the previous chips amount to enable the undo
             const chipsAmount = this.pool.getResources(chipType) || 0;
             res.push(new GetCardAction(chipsAmount));
         }
@@ -65,8 +67,8 @@ export default class NoThanksState extends GameState {
     }
 
     public get playerHasEnoughChips(): boolean {
-        const chips = this.players[this.whoisturn]._pool.getResources(chipType);
-        return (chips !== null && chips > 0);
+        const chips = this.players[this.whoisturn]._pool.getResources(chipType) || 0;
+        return (chips > 0);
     }
 
     public payChip(): NoThanksState {
@@ -79,7 +81,7 @@ export default class NoThanksState extends GameState {
 
     public unpayChip(): NoThanksState {
         const paidChips = this.pool.getResources(chipType);
-        if ( paidChips && paidChips > 0) {
+        if (paidChips && paidChips > 0) {
             this.pool.removeResources(chipType);
             this.players[this.whoisturn]._pool.addResources(chipType);
         }
@@ -87,12 +89,11 @@ export default class NoThanksState extends GameState {
     }
 
     public passTurn(): NoThanksState {
-        if (this.playerHasEnoughChips) {
-            this.whoisturn++;
-            if (this.whoisturn >= this.players.length) {
-                this.whoisturn = 0;
-            }
+        this.whoisturn++;
+        if (this.whoisturn >= this.players.length) {
+            this.whoisturn = 0;
         }
+
         return this;
     }
 
@@ -131,12 +132,12 @@ export default class NoThanksState extends GameState {
         }
     }
 
-    public get currentPlayer() : NoThanksPlayer {
+    public get currentPlayer(): NoThanksPlayer {
         return this.players[this.whoisturn];
     }
 
     // return the player with the highest score
-    public get currentWinners() : NoThanksPlayer[] {     
+    public get currentWinners(): NoThanksPlayer[] {
         let winners = [this.players[0]];
         let score = this.players[0].score;
         for (let i = 1; i < this.players.length; i++) {
@@ -146,7 +147,7 @@ export default class NoThanksState extends GameState {
                 winners.push(this.players[i]);
             }
         }
-        return winners;   
+        return winners;
     }
 
 }
