@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed, action } from "mobx";
-import {ComplexityAnalyst, GameAction} from "./decision";
+import {ComplexityAnalyst, GameAction, GameHistory} from "./decision";
 import UniqueGameElement from "./gameElement"
 import Player from "./player";
 
@@ -10,6 +10,7 @@ export default abstract class GameState {
     complexityAnalyst?: ComplexityAnalyst;
     players: Player[];
     status: GameStatus;
+    history: GameHistory;
 
     public constructor (protected _minPlayers = 1, protected _maxPlayers = 5, players: Player[] = [], gameElements: UniqueGameElement[], status?: GameStatus, complexityAnalyst?: ComplexityAnalyst) {
         this.players = players;
@@ -20,6 +21,7 @@ export default abstract class GameState {
         } else {
             this.status = "open";
         }
+        this.history = new GameHistory();
         makeObservable (this, {
             players: observable,
             availableActions: computed,
@@ -28,6 +30,8 @@ export default abstract class GameState {
             enoughPlayers: computed,
             isMaxPlayersReached: computed,
             startGame: action,
+            history: observable,
+            canUndo: computed,
         });
     }
     protected abstract computeAvailableActions() : GameAction[];
@@ -48,10 +52,21 @@ export default abstract class GameState {
         return res;
     }
 
-    public makeDecision(decision: GameAction) {
-        if (this.availableActions.indexOf(decision) !== -1) {
-            decision.execute(this);
+    public executeAction(action: GameAction) {
+        if (this.availableActions.indexOf(action) !== -1) {
+            action.execute(this);
+            this.history.addAction(action);
         }
+    }
+
+    public undoAction() {
+        if (this.history.length > 0) {
+            this.history.undoAction(this);
+        }
+    }
+
+    public get canUndo() {
+        return this.history.length > 0;
     }
 
     public get enoughPlayers() {

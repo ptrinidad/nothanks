@@ -9,6 +9,8 @@ import SummaryPanel from 'src/components/layout/SummaryPanel'
 import CardsPanel from 'src/components/layout/CardsPanel'
 import HeadingPanel from 'src/components/layout/HeadingPanel'
 import ChipsPanel from 'src/components/layout/ChipsPanel'
+import HistoryPanel from 'src/components/layout/HistoryPanel'
+
 
 import gameState from 'pages/store'
 
@@ -30,6 +32,7 @@ export default observer(class Play extends React.Component<{}, {}> {
           <Flex justifyContent="center" align="stretch" wrap="wrap">
             <CardsPanel flex="0 1 100%" />
             <ChipsPanel flex="0 1 100%" />
+            <HistoryPanel flex="0 1 100%" />
           </Flex>
         : null}
         <SummaryPanel />
