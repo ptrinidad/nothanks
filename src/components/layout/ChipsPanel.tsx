@@ -40,7 +40,7 @@ export default observer(class ChipsPanel extends React.Component<IChipsPanelProp
                             <Chips chips={boardChips} />
                         </Center>
                         <Center m="1em" w='10em'>
-                            {action ? <Button key={action.actionName} sx={actionButtonStyle} onClick={() => action.execute(gameState)}>{action.actionName}</Button> : null}
+                            {action ? <Button key={action.actionName} sx={actionButtonStyle} onClick={() => gameState.executeAction(action)}>{action.actionName}</Button> : null}
                         </Center>
                         <Center m="1em" w='70px'>
                             <Chips chips={playerChips} />

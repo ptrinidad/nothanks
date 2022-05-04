@@ -61,7 +61,8 @@ export default class NoThanksState extends GameState {
 
             // get card action needs the previous chips amount to enable the undo
             const chipsAmount = this.pool.getResources(chipType) || 0;
-            res.push(new GetCardAction(chipsAmount));
+            const card = this.deck.head;
+            res.push(new GetCardAction(card, chipsAmount));
         }
         return res;
     }
@@ -99,7 +100,7 @@ export default class NoThanksState extends GameState {
 
     public revokeTurn(): NoThanksState {
         this.whoisturn--;
-        if (this.whoisturn <= 0) {
+        if (this.whoisturn < 0) {
             this.whoisturn = this.players.length - 1;
         }
         return this;
@@ -119,8 +120,9 @@ export default class NoThanksState extends GameState {
         return this;
     }
 
-    public undoPlayerGetsCurrentCard(chipsAmount: number): NoThanksState {
-        this.players[this.whoisturn]._cards.pop(this.deck);
+    public undoPlayerGetsCurrentCard(card: NoThanksCard, chipsAmount: number): NoThanksState {
+        this.players[this.whoisturn]._cards.removeCard(card);
+        this.deck.addCard(card);
         this.pool.addResources(chipType, chipsAmount);
         this.players[this.whoisturn]._pool.removeResources(chipType, chipsAmount);
         return this;

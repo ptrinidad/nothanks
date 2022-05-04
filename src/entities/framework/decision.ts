@@ -1,3 +1,4 @@
+import { action, computed, makeObservable, observable } from "mobx";
 import GameState from "./gameState";
 
 export abstract class GameAction {
@@ -16,6 +17,12 @@ export class GameHistory {
         } else {
             this._actionsHistory = [];
         }
+        makeObservable (this, {
+            _actionsHistory: observable,
+            addAction: action,
+            undoAction: action,
+            length: computed,
+        });
     }
 
     public addAction (action: GameAction) {
@@ -30,6 +37,10 @@ export class GameHistory {
             return lastAction.undo(state);
         }
         return state;
+    }
+
+    public get length () : number {
+        return this._actionsHistory.length;
     }
 }
 

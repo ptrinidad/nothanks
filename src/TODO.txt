@@ -1,6 +1,7 @@
 - Deploy at https://vercel.com
-- Undo
+- AI players
 - i18n support
+- Generalize nothanks and refactor the gaming framework
 
 FIXME
 - Initial colours in player data doesn't correspond to data (https://nextjs.org/docs/messages/react-hydration-error)
@@ -14,5 +15,6 @@ DONE
 - 2/05/2022 End of game condition
 - 2/05/2022 Stop adding players when limit reached and disable start if not enough or too much players.
 - 3/05/2022 Fixed: a player cannot pass with 1 chip remaining. Chip reduced and must take card!
+- 4/05/2022 Undo action support
 
 

@@ -59,7 +59,7 @@ export default observer(class CardsPanel extends React.Component<ICardsPanelProp
                         <Badge variant="outline" colorScheme="brand" sx={badgeStyle}>{deckSize}</Badge>
                     </Box>
                     <Center w='10em'>
-                        {action ? <Button key={action.actionName} sx={actionButtonStyle} m="1em"  onClick={() => action.execute(gameState)}>{action.actionName}</Button> : null}
+                        {action ? <Button key={action.actionName} sx={actionButtonStyle} m="1em"  onClick={() => gameState.executeAction(action)}>{action.actionName}</Button> : null}
                     </Center>
 
                     <HStack p="1em" spacing="0">

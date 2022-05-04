@@ -1,3 +1,5 @@
+This project is a standalone offline implementation of the No Thanks! cardgame. This is an exercise to show how React, MobX and ChakraUI can be used to test board games in web browsers.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

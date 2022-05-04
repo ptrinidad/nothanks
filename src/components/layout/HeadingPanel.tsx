@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { observer } from 'mobx-react';
-import { Badge, Box, Button, FlexProps, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
+import { FlexProps, Heading, Text, VStack } from '@chakra-ui/react';
 
 import gameState from 'pages/store';
 
