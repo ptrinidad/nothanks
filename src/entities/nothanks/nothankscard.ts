@@ -6,4 +6,8 @@ export class NoThanksCard extends Card {
         super (value.toString());
         this.value = -value;
     }
+
+    public toString() : string {
+        return (-this.value).toString();
+    }
 }

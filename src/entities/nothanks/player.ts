@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable, override } from "mobx";
+import { action, computed, makeObservable, observable, override } from "mobx";
 
 import { NoThanksCard } from "./nothankscard";
 import { Resources, chipType } from "./common";
@@ -22,6 +22,8 @@ export default class NoThanksPlayer extends Player {
             _pool: observable,
             _cards: observable,
             score: computed,
+            payChip: action,
+            hasEnoughChips: computed,
         });
     }
 
@@ -41,5 +43,18 @@ export default class NoThanksPlayer extends Player {
             }
         }
         return res;
+    }
+
+    public payChip() : void {
+        this._pool.removeResources(chipType, 1);
+    }
+
+    public unpayChip() : void {
+        this._pool.addResources(chipType, 1);
+    }
+
+    public get hasEnoughChips() : boolean {
+        const chips = this._pool.getResources(chipType) || 0;
+        return chips > 0;
     }
 }

@@ -1,24 +1,26 @@
 import { makeObservable, observable, computed, action, override } from "mobx";
 import CardHolder from "../framework/cardholder";
-import { ComplexityAnalyst, GameAction } from "../framework/decision";
+import GameAction from "../framework/gameAction";
 import UniqueGameElement from "../framework/gameElement";
 import GameState, { GameStatus } from "../framework/gameState"
 import ResourcesPool from "../framework/resourcesPool";
+import ComplexityAnalyst from "../framework/complexityAnalyst";
+
 import { GetCardAction, PassAction } from "./actions";
 import { NoThanksCard } from "./nothankscard";
 import { Resources, chipType } from "./common";
 import NoThanksPlayer from "./player";
 
 export default class NoThanksState extends GameState {
+    protected _players: NoThanksPlayer[];  
     deck: CardHolder<NoThanksCard>;
     removedCards: CardHolder<NoThanksCard>;
     whoisturn: number;
-    players: NoThanksPlayer[];
     pool: ResourcesPool<Resources>;
 
     public constructor(players: NoThanksPlayer[], gameElements: UniqueGameElement[], status?: GameStatus, complexityAnalyst?: ComplexityAnalyst) {
         super(3, 5, players, gameElements, status, complexityAnalyst);
-        this.players = players;
+        this._players = players;
         this.deck = new CardHolder<NoThanksCard>();
         this.removedCards = new CardHolder<NoThanksCard>();
         for (let i = 3; i <= 35; i++) {
@@ -36,20 +38,26 @@ export default class NoThanksState extends GameState {
             availableActions: override,
             status: override,
             gameElements: override,
+            history: override,
             deck: observable,
             removedCards: observable,
             whoisturn: observable,
             pool: observable,
             playerHasEnoughChips: computed,
             currentCard: computed,
-            payChip: action,
             passTurn: action,
             revokeTurn: action,
             playerGetsCurrentCard: action,
             addPlayer: action,
             currentPlayer: computed,
             currentWinners: computed,
+            addChipToPool: action,
+            removeChipFromPool: action,
         });
+    }
+
+    public get players(): NoThanksPlayer[] {
+        return this._players;
     }
 
     protected computeAvailableActions(): GameAction[] {
@@ -72,21 +80,12 @@ export default class NoThanksState extends GameState {
         return (chips > 0);
     }
 
-    public payChip(): NoThanksState {
-        if (this.playerHasEnoughChips) {
-            this.players[this.whoisturn]._pool.removeResources(chipType);
-            this.pool.addResources(chipType);
-        }
-        return this;
+    public addChipToPool() {
+        this.pool.addResources(chipType);
     }
 
-    public unpayChip(): NoThanksState {
-        const paidChips = this.pool.getResources(chipType);
-        if (paidChips && paidChips > 0) {
-            this.pool.removeResources(chipType);
-            this.players[this.whoisturn]._pool.addResources(chipType);
-        }
-        return this;
+    public removeChipFromPool() {
+        this.pool.removeResources(chipType);
     }
 
     public passTurn(): NoThanksState {

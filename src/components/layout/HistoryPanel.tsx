@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { observer } from 'mobx-react';
-import { Badge, Box, Button, FlexProps, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Button, FlexProps, Textarea, VStack } from '@chakra-ui/react';
 
 import gameState from 'pages/store';
 
@@ -26,10 +26,23 @@ export default observer(class HeadingPanel extends React.Component<IHistoryPanel
 
         return (
             (gameState.status === "playing" && gameState.canUndo) ? 
-            <VStack>
+            <VStack w="100%">
+                <LogArea value={history.log.join("\n")} />
                 <Button m="1em" onClick={() => gameState.undoAction()} sx={actionButtonStyle}>Undo</Button>
             </VStack>
             : null
         );
     }
 })
+
+const LogArea = (props: any) => {
+    const ref = React.useRef<HTMLTextAreaElement>(null);
+    React.useEffect(() => {
+        if (ref.current) {
+            ref.current.scrollTop = ref.current.scrollHeight;
+        }
+    }, [props.value]);
+    return (
+        <Textarea ref={ref} m="1em" isFullWidth isReadOnly value={props.value} />
+    );
+}
