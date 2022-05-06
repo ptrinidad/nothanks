@@ -23,18 +23,23 @@ export default class CardHolder<C extends Card> {
     }
 
     public addCard(card: C) {
-            this.cards.push(card);
+        this.cards.push(card);
+    }
+
+    public addCards(cards: C[]) {
+        this.cards.push(...cards);
     }
 
     public removeCard(card: C): boolean {
         const pos = this.cards.indexOf(card);
         if (pos != -1) {
-            this.cards = this.cards.splice(pos, 0);
+            this.cards.splice(pos, 1);
             return true;
         } else {
             return false;
         }
     }
+
     public moveCard(card: C, holder: CardHolder<C>): boolean {
         const res = this.removeCard(card);
         holder.addCard(card);

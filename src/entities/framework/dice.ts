@@ -1,3 +1,4 @@
+import { values } from "mobx";
 import UniqueGameElement from "./gameElement";
 
 export default abstract class AbstractDice extends UniqueGameElement {
@@ -5,6 +6,9 @@ export default abstract class AbstractDice extends UniqueGameElement {
 
     public constructor (faces?: number) {
         super();
+        if (faces !== undefined && faces < 1) {
+            throw new Error("Dice faces must be greater than 0");
+        }
         this.faces = faces ? faces : 6;
     }
 
@@ -19,7 +23,13 @@ export class StandardDice extends AbstractDice {
     }
 
     public get value() : number  {return this._value;}
-    public set value(v: number) {this._value = v;}
+    public set value(v: number) {
+        if (v <= this.faces && v >= 1) {
+            this._value = v;
+        } else {
+            throw new Error("value " + v + " is not valid for " + this.faces + "-sided dice");
+        }
+    }
 
     public roll() : number {
         this.value = Math.floor(Math.random() * this.faces) + 1;
@@ -30,13 +40,20 @@ export class StandardDice extends AbstractDice {
 export class NonStandardDice extends AbstractDice {
     _value: number;
     _values: number [];
-    public constructor (values: number[], current?: number) {
+    public constructor (values: number[]) {
         super(values.length);
-        if (this.faces <= 0 || (current && current >= values.length) ) {
-            throw new Error();
-        }
+
         this._values = [...values];
-        this._value = this._values[current || 0];
+        this._value = this.roll();
+    }
+
+    public get value() : number  {return this._value;}
+    public set value(v: number) {
+        if (this._values.includes(v)) {
+            this._value = v;
+        } else {
+            throw new Error("value " + v + " is not valid for the non-standard dice " + this._values);
+        }
     }
 
     public roll() : number {

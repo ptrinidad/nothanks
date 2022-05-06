@@ -1,10 +1,11 @@
 import {v4} from 'uuid';
 
 export default class UniqueGameElement {
-    _uid: string;
+    readonly _uid: string;
 
-    public constructor();
     public constructor(id?: string) {
-        this._uid = id ? id : v4();
+        this._uid = (id !== undefined) ? id : v4();
     }
+
+    public get uid() : string {return this._uid;}
 }
