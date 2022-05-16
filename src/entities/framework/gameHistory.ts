@@ -6,10 +6,13 @@ export default class GameHistory {
     _actionsHistory: GameAction[];
     _log: string[];
 
-    public constructor ()
     public constructor (actionHistory?: GameAction[], log?: string[]) {
         this._actionsHistory = actionHistory || [];
-        this._log = log || [];
+        if (log !== undefined)  {
+            this._log = log;
+        } else {
+            this._log = this._actionsHistory.map(action => action.toString());
+        }
         
         makeObservable (this, {
             _actionsHistory: observable,

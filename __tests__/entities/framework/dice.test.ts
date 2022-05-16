@@ -18,16 +18,15 @@ describe('Standard dice tests', () => {
         }
     })
 
-    test('N-side standard dice rolls numbers between 1 and N', () => {
-        for (let faces = 1; faces < 100; faces++) {
-            const dice = new StandardDice(faces);
-            for (let i = 0; i < 100; i++) {
-                const rolledNumber = dice.roll()
-                expect(rolledNumber).toBeGreaterThanOrEqual(1);
-                expect(rolledNumber).toBeLessThanOrEqual(faces);
-                expect(dice.value).toBe(rolledNumber);
-            }
-        }               
+    const faces = Array.from(Array(100).keys()).map(i => i + 1);
+    test.each(faces)('%j-side standard dice rolls numbers between 1 and %j', (faces: number) => {
+        const dice = new StandardDice(faces);
+        for (let i = 0; i < 100; i++) {
+            const rolledNumber = dice.roll()
+            expect(rolledNumber).toBeGreaterThanOrEqual(1);
+            expect(rolledNumber).toBeLessThanOrEqual(faces);
+            expect(dice.value).toBe(rolledNumber);
+        }
     })
 
     test('N-side standard dice rolls numbers between 1 and 6', () => {
@@ -53,7 +52,7 @@ describe('Non-standard dice tests', () => {
     });
 
     test('Dice should be created with at least one value', () => {
-        const valuesArray = [1,2];
+        const valuesArray = [1, 2];
         const dice = new NonStandardDice(valuesArray);
         expect(dice.faces).toBe(2);
 
